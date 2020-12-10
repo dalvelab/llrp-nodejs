@@ -1,0 +1,12 @@
+{
+  "name": "nodejs-llrp",
+  "version": "1.0.0",
+  "description": "Custom LLRP implementation with JS for Impinj R-420",
+  "main": "client.js",
+  "type": "module",
+  "scripts": {
+    "start": "node client.js"
+  },
+  "author": "Vlad Bragin",
+  "license": "ISC"
+}
