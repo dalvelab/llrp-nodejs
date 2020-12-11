@@ -1,51 +1,48 @@
 /* This file is responsible for handling TCP connection to Reader (10.12.2020) */
 
-import net from "net";
-
-import { handleReaderData } from "./LLRP/mainLLRP.js";
-
-const client = new net.Socket();
+import { LLRPConnection } from "./LLRP/mainLLRP.js";
 
 // Proto config
-const IP_ADDRESS = "192.168.1.143";
-const PORT = 5084;
+const config = {
+  IP_ADDRESS: "192.168.1.137",
+  PORT: 5084,
+};
+
+const reader = LLRPConnection(config);
+
+console.log(reader);
 
 // Create TCP connection
-client.connect(PORT, IP_ADDRESS, function () {
-  console.log(`Reader ${IP_ADDRESS} is connected`);
-});
+reader.handleConnection();
 
 // Listen for TCP data
-client.on("data", function (data) {
-  handleReaderData(data);
-});
+reader.handleData();
 
 // Close TCP connection
-client.on("close", function () {
-  console.log("Connection closed");
-});
+reader.handleClose();
 
-// Process listen ctrl+c terminal
+// Process listens ctrl+c terminal
 process.on("SIGINT", () => {
   console.log("Process finished with ctrl+c");
   processExit();
 });
 
-// catches uncaught exceptions
-process.on("uncaughtException", () => {
-  console.log("uncaughtException");
+// Process catches uncaught exceptions
+process.on("uncaughtException", (err, origin) => {
+  console.log(`Caught exception: ${err}`);
+  console.log(`Exception origin: ${origin}`);
   processExit();
 });
 
-// catches unhandled promise rejection
-process.on("unhandledRejection", () => {
-  console.log("unhandledRejection");
+// Process catches unhandled promise rejection
+process.on("unhandledRejection", (reason, promise) => {
+  console.log(`Unhandled Rejection at: ${promise}, reason: ${reason}`);
   processExit();
 });
 
 const processExit = () => {
   // Close TCP connection
-  client.destroy();
+  reader.handleDestroy();
   // Set timeout to wait till TCP get destroyed (Should remove later?)
   setTimeout(() => {
     process.exit(0);

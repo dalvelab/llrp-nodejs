@@ -10,10 +10,12 @@ export const getLLRPMessage = (message) => {
 
 export const getMessageName = (message) => {
   // Define message type outside the
+  let messageName;
   const messageType = message.type;
-  return messagesType.map((message) => {
+  messagesType.map((message) => {
     if (message.type === messageType) {
-      return message.name;
+      messageName = message.name;
     }
   });
+  return messageName;
 };

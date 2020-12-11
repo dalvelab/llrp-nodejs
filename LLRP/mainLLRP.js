@@ -2,29 +2,46 @@
   This file is responsible for all functions that gonna be executed on TCP events
   Also it sends and receives messages and parameters from reader  
 */
+import net from "net";
 
-import { messagesType } from "./constants/messagesConstants.js";
-import { decodeMessage } from "./decoder.js";
-import { getLLRPMessage, getMessageName } from "./message.js";
+import { handleReaderData } from "./actions/readerActions.js";
 
-export const handleReaderData = (data) => {
-  if (!data) {
-    console.log("No data returned by reader");
-  }
+const socket = new net.Socket();
+let client = null;
 
-  const messagesKeyValue = decodeMessage(data);
+export const LLRPConnection = (config) => {
+  let LLRPProps = {
+    ipaddress: config.IP_ADDRESS,
+    port: config.PORT,
+  };
+  // Connect to Reader
+  const handleConnection = () => {
+    client = socket.connect(LLRPProps.port, LLRPProps.ipaddress, function () {
+      console.log(`Reader ${config.IP_ADDRESS} is connected`);
+    });
+  };
+  // Get data from Reader
+  const handleData = () => {
+    client.on("data", (data) => {
+      handleReaderData(data, LLRPProps);
+    });
+  };
+  // Close connection with Reader
+  const handleClose = () => {
+    client.on("close", function () {
+      console.log("Connection closed");
+    });
+  };
+  // Destroy connection with Reader (when finish process in cli)
+  const handleDestroy = () => {
+    client.destroy();
+  };
 
-  for (const index in messagesKeyValue) {
-    const message = getLLRPMessage(messagesKeyValue[index]);
-
-    console.log(`Receiving: ${getMessageName(message)}`);
-
-    switch (getMessageName(message)) {
-      case "READER_EVENT_NOTIFICATION":
-        console.log("This is the case");
-        break;
-      default:
-        console.log(`Default case called: ${getMessageName(message)}`);
-    }
-  }
+  return {
+    LLRPProps,
+    handleConnection,
+    handleData,
+    handleClose,
+    handleDestroy,
+  };
 };
