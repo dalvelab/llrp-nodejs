@@ -1,27 +1,27 @@
-/**
-  This file is responsible for storing parameter constants
+// Interface
+import { ParameterConstants } from "../interfaces/parameterConstantsInterface";
 
- * @param  {String}  name             the parameter name.
- * @param  {Int}     value            the parameter type number.
- * @param  {Object}  exportsObject    the object that will contain the "constants"
- * @param  {Boolean} hasSubParameter  does the parameter possibly contain
- * @param  {Int}     tvLength         how long in bytes the entire TV encoded parameter is.
- * @param  {Int}     staticLength     how long in bytes is the encoded parameter up to the last value, excluding sub-parameters and variable length values.
- */
-
-const exportsObject = {
+const exportsObject: ParameterConstants = {
   tvLengths: {},
   staticLengths: {},
   hasSubParameters: {},
 };
 
-const define = (name, value, hasSubParameter, tvLength, staticLength) => {
+const define: Function = function (
+  name: string,
+  value: number,
+  hasSubParameter: boolean,
+  tvLength: number,
+  staticLength: number
+): void {
   // is tvLength set and greater than 0.
   if (tvLength && tvLength > 0) {
+    // set tvLengths, use parameter type number (value) as the key.
+    // defining our constant.
     Object.defineProperty(exportsObject.tvLengths, value, {
       value: tvLength,
       enumerable: true,
-      writable: false,
+      writable: false, // non-writable, making it a constant.
     });
   }
 
@@ -56,6 +56,7 @@ const define = (name, value, hasSubParameter, tvLength, staticLength) => {
     writable: false, // non-writable, making it a constant.
   });
 
+  // defining our constant, reversed with key as value and value as key.
   Object.defineProperty(exportsObject, value, {
     value: name,
     enumerable: false, // don't include as an enumerable parameter

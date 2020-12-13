@@ -2,11 +2,21 @@
   "name": "nodejs-llrp",
   "version": "1.0.0",
   "description": "Custom LLRP implementation with JS for Impinj R-420",
-  "main": "client.js",
-  "type": "module",
+  "main": "./LLRP/index.js",
   "scripts": {
-    "start": "node client.js"
+    "build": "rimraf dist/ & tsc",
+    "dev": "ts-node-dev --respawn build/index.ts",
+    "start": "tsc & node dist/index.js"
   },
   "author": "Vlad Bragin",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^14.14.13",
+    "rimraf": "^3.0.2",
+    "ts-node": "^9.1.1",
+    "ts-node-dev": "^1.1.1",
+    "tslint-config-airbnb": "^5.11.2",
+    "typescript": "^4.1.3"
+  }
 }
