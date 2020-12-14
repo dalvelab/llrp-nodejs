@@ -39,7 +39,7 @@ export class LLRPMessage implements LlrpMessage {
     if (typeof data.parameter !== "undefined") {
       this.setParameter(data.parameter);
     } else {
-      this.setParameter(new Buffer(0));
+      this.setParameter(Buffer.alloc(0));
     }
 
     if (typeof data.version !== "undefined") {

@@ -12,10 +12,10 @@ export interface AntennaConfig {
 }
 
 export interface RospecParameters {
-  enableReadingTid?: boolean;
-  antennasConfig?: AntennaConfig[];
-  tagPopulation?: number;
-  modeIndex?: number;
+  enableReadingTid: boolean;
+  antennasConfig: AntennaConfig[];
+  tagPopulation: number;
+  modeIndex: number;
   channelIndex: number;
   inventorySearchMode: number; // 1 - Single target (impinj custom parameter)
 }
